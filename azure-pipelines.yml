@@ -93,3 +93,7 @@ stages:
               kubernetesServiceEndpoint: "jpmmbohaAKS"
               command: "annotate"
               arguments: 'deployment/aspnetcore kubernetes.io/change-cause="$(Build.DefinitionName) run $(Build.BuildNumber)"'  
+
+
+
+              
