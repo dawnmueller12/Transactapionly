@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transact.API", "Transact.API\Transact.API.csproj", "{B421F491-FF90-49B4-8E0D-5E6420917889}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transact.Data", "Transact.Data\Transact.Data.csproj", "{878BD196-A512-405A-94CF-7BFD21ABAD82}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Transact.Web", "Transact.Web", "{C44E1A19-2905-4759-8BBF-458E4D41F5FA}"
+	ProjectSection(SolutionItems) = preProject
+		Transact.Web\.browserslistrc = Transact.Web\.browserslistrc
+		Transact.Web\.editorconfig = Transact.Web\.editorconfig
+		Transact.Web\.gitignore = Transact.Web\.gitignore
+		Transact.Web\angular.json = Transact.Web\angular.json
+		Transact.Web\karma.conf.js = Transact.Web\karma.conf.js
+		Transact.Web\package-lock.json = Transact.Web\package-lock.json
+		Transact.Web\package.json = Transact.Web\package.json
+		Transact.Web\README.md = Transact.Web\README.md
+		Transact.Web\tsconfig.app.json = Transact.Web\tsconfig.app.json
+		Transact.Web\tsconfig.json = Transact.Web\tsconfig.json
+		Transact.Web\tsconfig.spec.json = Transact.Web\tsconfig.spec.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B421F491-FF90-49B4-8E0D-5E6420917889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B421F491-FF90-49B4-8E0D-5E6420917889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B421F491-FF90-49B4-8E0D-5E6420917889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B421F491-FF90-49B4-8E0D-5E6420917889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878BD196-A512-405A-94CF-7BFD21ABAD82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878BD196-A512-405A-94CF-7BFD21ABAD82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878BD196-A512-405A-94CF-7BFD21ABAD82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878BD196-A512-405A-94CF-7BFD21ABAD82}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC4C2F5E-DAAC-4775-9B6C-7AFC230B774C}
+	EndGlobalSection
+EndGlobal
