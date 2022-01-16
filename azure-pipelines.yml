@@ -66,30 +66,30 @@ stages:
           - task: Docker@2
             displayName: "Authenticate with Docker registry"
             inputs:
-              containerRegistry: 'DevOps.Playground Registry'
+              containerRegistry: 'jpmbohaacr'
               command: 'login'
           - script: |
-              docker build -t devopsplayground.azurecr.io/aspnetcore:latest \
+              docker build -t jpmbohaacr.azurecr.io/aspnetcore:latest \
                 -f $(Build.SourcesDirectory)/Dockerfile $(Build.SourcesDirectory)/
-              docker push devopsplayground.azurecr.io/aspnetcore:latest
+              docker push jpmbohaacr.azurecr.io/aspnetcore:latest
             displayName: "Build and push the Docker image"
           - task: KubernetesManifest@0
             displayName: "Deploy the pushed image to Kubernetes"
             inputs:
               action: "deploy"
-              kubernetesServiceConnection: "DevOps.Playground Cluster"
+              kubernetesServiceConnection: "jpmmbohaAKS"
               manifests: "**/deployment.yml"
           - task: Kubernetes@1
             displayName: "Roll-out the updated image in Kubernetes"
             inputs:
               connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "DevOps.Playground Cluster"
+              kubernetesServiceEndpoint: "jpmmbohaAKS"
               command: "rollout"
               arguments: "restart deployment/aspnetcore"
           - task: Kubernetes@1
             displayName: "Annotate the rolled-out deployment"
             inputs:
               connectionType: "Kubernetes Service Connection"
-              kubernetesServiceEndpoint: "DevOps.Playground Cluster"
+              kubernetesServiceEndpoint: "jpmmbohaAKS"
               command: "annotate"
               arguments: 'deployment/aspnetcore kubernetes.io/change-cause="$(Build.DefinitionName) run $(Build.BuildNumber)"'  
