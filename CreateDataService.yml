@@ -1,0 +1,16 @@
+# service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: transact-backend
+  name: transactdata
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: transact-data
+    component: netcore-app
+  type: LoadBalancer

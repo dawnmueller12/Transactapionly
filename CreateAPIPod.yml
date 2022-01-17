@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: transact-api-pod
+  labels:
+    app: transact-backend
+    component: netcore-app
+spec:
+  containers:
+    - image: transactacr.azurecr.io/transactapi:v1
+      name: transactapi
+      ports:
+        - containerPort: 80
