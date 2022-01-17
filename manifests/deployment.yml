@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: transactapi 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transactapi
+  template:
+    metadata:
+      labels:
+        app: transactapi 
+    spec:
+      containers:
+        - name: transactapi 
+          image: transactapionly2acr.azurecr.io/transactapi
+          ports:
+          - containerPort: 5000
