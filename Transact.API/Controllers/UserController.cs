@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using Transact.Data;
-using Transact.Data.Abstractions.UnitOfWork;
+using Transact.Data.Abstractions.Services;
 using Transact.Data.Models.Common;
-using Transact.Data.Services;
 using Transact.Data.ViewModels;
 
 namespace Transact.API.Controllers
@@ -20,17 +18,16 @@ namespace Transact.API.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private UserService _userService = null;
-       
+        private IUserService _userService = null;
 
-        public UserController(IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment,
-            IConfiguration config, IMapper mapper, AppSettings appSettings) : base(unitOfWork, hostingEnvironment, config, mapper, appSettings)
+
+        public UserController(IWebHostEnvironment hostingEnvironment, IConfiguration config, AppSettings appSettings, IUserService userService) : base(hostingEnvironment, config, appSettings)
         {
+            _userService = userService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            _userService = new UserService(_unitOfWork, _mapper, _appSettings);
         }
 
         [HttpGet]

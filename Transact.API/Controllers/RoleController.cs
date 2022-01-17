@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using Transact.Data;
-using Transact.Data.Abstractions.UnitOfWork;
+using Transact.Data.Abstractions.Services;
 using Transact.Data.Models.Common;
-using Transact.Data.Services;
 using Transact.Data.ViewModels;
 
 namespace Transact.API.Controllers
@@ -20,16 +18,15 @@ namespace Transact.API.Controllers
     [Authorize]
     public class RoleController : ControllerBase
     {
-        private RoleService _roleService = null;
+        private IRoleService _roleService = null;
 
-        public RoleController(IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment,
-            IConfiguration config, IMapper mapper, AppSettings appSettings) : base(unitOfWork, hostingEnvironment, config, mapper, appSettings)
+        public RoleController(IWebHostEnvironment hostingEnvironment, IConfiguration config, AppSettings appSettings, IRoleService roleService) : base(hostingEnvironment, config, appSettings)
         {
+            _roleService = roleService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            _roleService = new RoleService(_unitOfWork, _mapper, _appSettings);
         }
 
         [HttpGet]

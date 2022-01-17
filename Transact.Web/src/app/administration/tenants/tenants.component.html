@@ -1,0 +1,194 @@
+<div class="row">
+  <div class="col-md-12">
+    <!--- Complete Table -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-0"><span class="lstick"></span>Tenants</h4>
+        <div class="d-flex mt-3">
+          <button
+            type="button"
+            class="btn btn-primary ml-auto"
+            (click)="openModal(editModal, null)"
+          >
+            + Add Tenants
+          </button>
+        </div>
+        <table class="table table-striped border mt-4">
+          <thead>
+            <tr>
+              <th sortable="organizationName" (sort)="onSort($event)">Name</th>
+              <th sortable="organizationAddress" (sort)="onSort($event)">
+                Address
+              </th>
+              <th sortable="state" (sort)="onSort($event)">State</th>
+              <th sortable="city" (sort)="onSort($event)">City</th>
+              <th sortable="pincode" (sort)="onSort($event)">Pincode</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let tenant of cfilterTenant
+                  | slice
+                    : (cpage - 1) * cpageSize
+                    : (cpage - 1) * cpageSize + cpageSize
+              "
+            >
+              <td>
+                <ngb-highlight
+                  [result]="tenant.OrganizationName"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="tenant.OrganizationAddress"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="tenant.State"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="tenant.City"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="tenant.Pincode"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <em
+                  class="ti-pencil text-info m-r-10 pointer"
+                  (click)="openModal(editModal, tenant)"
+                ></em>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2"></div>
+      </div>
+    </div>
+    <!--- End Complete Table -->
+  </div>
+</div>
+<!--- Modal for complete Table -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editLabel">{{ editAddLabel }} Tenant</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="closeBtnClick()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="editTenant" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="organizationName" class="col-sm-4 col-form-label"
+          >Organization Name</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="organizationName"
+            id="organizationName"
+            (blur)="logValidationErrors(editClient)"
+          />
+          <span class="help-block" *ngIf="formsErrors.organizationName">
+            {{ formsErrors.organizationName }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="organizationAddress" class="col-sm-4 col-form-label"
+          >Organization Address</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="organizationAddress"
+            id="organizationAddress"
+            (blur)="logValidationErrors(editClient)"
+          />
+          <span class="help-block" *ngIf="formsErrors.organizationAddress">
+            {{ formsErrors.organizationAddress }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="state" class="col-sm-4 col-form-label">State</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="state"
+            id="state"
+            (blur)="logValidationErrors(editClient)"
+          />
+          <span class="help-block" *ngIf="formsErrors.state">
+            {{ formsErrors.state }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="city" class="col-sm-4 col-form-label">City</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="city"
+            id="city"
+            (blur)="logValidationErrors(editClient)"
+          />
+          <span class="help-block" *ngIf="formsErrors.city">
+            {{ formsErrors.city }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="pincode" class="col-sm-4 col-form-label">Pincode</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="pincode"
+            id="pincode"
+            (blur)="logValidationErrors(editClient)"
+          />
+          <span class="help-block" *ngIf="formsErrors.pincode">
+            {{ formsErrors.pincode }}
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="closeBtnClick()">
+          Close
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="editTenant.invalid"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

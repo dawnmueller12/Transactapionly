@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transact-web
+  labels:
+    app: transact-web
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: transact-web
+  template:
+    metadata:      
+      name: transat-web
+      labels:
+        app: transact-web
+    spec:
+      containers:
+      - name: transact-web
+        image: bohaacr.azurecr.io/transact.web:v1               
+        resources: {}
+        imagePullPolicy: Always        
+        ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: transact-web
+  labels: 
+    app: transact-web
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: transact-web
+  

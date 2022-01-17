@@ -1,0 +1,279 @@
+<div class="row">
+  <div class="col-md-12">
+    <!--- Complete Table -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-0">
+          <span class="lstick"></span>User Accounts
+        </h4>
+        <div class="d-flex mt-3">
+          <button
+            type="button"
+            class="btn btn-primary ml-auto"
+            (click)="openModal(editModal, null)"
+          >
+            + Add User Account
+          </button>
+        </div>
+        <table class="table table-striped border mt-4">
+          <thead>
+            <tr>
+              <th sortable="Name" (sort)="onSort($event)">First Name</th>
+              <th sortable="UserName" (sort)="onSort($event)">Last Name</th>
+              <th sortable="Email" (sort)="onSort($event)">Middle Name</th>
+              <th sortable="Email" (sort)="onSort($event)">Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let userAccount of cfilterUserAccount
+                  | slice
+                    : (cpage - 1) * cpageSize
+                    : (cpage - 1) * cpageSize + cpageSize
+              "
+            >
+              <td>
+                <ngb-highlight
+                  [result]="userAccount.FirstName"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="userAccount.LastName"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="userAccount.MiddleName"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="findRoleName(userAccount.RoleId)"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+
+              <td>
+                <em
+                  class="ti-pencil text-info m-r-10 pointer"
+                  (click)="openModal(editModal, userAccount)"
+                ></em>
+                <em
+                  class="ti-layers text-info pointer"
+                  (click)="openModal(tenantAssociation, userAccount.Id)"
+                ></em>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2"></div>
+      </div>
+    </div>
+    <!--- End Complete Table -->
+    <!--- Basic Table -->
+  </div>
+</div>
+<!--- Modal for complete Table -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editLabel">{{ editAddLabel }} User Account</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="closeBtnClick()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="editUserAccount" (ngSubmit)="onSubmit()">
+      <div class="form-group row">
+        <label for="firstName" class="col-sm-4 col-form-label"
+          >First Name</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            id="firstName"
+            (blur)="logValidationErrors(editUserAccount)"
+          />
+          <span class="help-block" *ngIf="formsErrors.firstName">
+            {{ formsErrors.firstName }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="lastName" class="col-sm-4 col-form-label">Last Name</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            id="lastName"
+            (blur)="logValidationErrors(editUserAccount)"
+          />
+          <span class="help-block" *ngIf="formsErrors.lastName">
+            {{ formsErrors.lastName }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="middleName" class="col-sm-4 col-form-label"
+          >Middle Name</label
+        >
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="middleName"
+            id="middleName"
+            (blur)="logValidationErrors(editUserAccount)"
+          />
+          <span class="help-block" *ngIf="formsErrors.middleName">
+            {{ formsErrors.middleName }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="roleId" class="col-sm-4 col-form-label">Role</label>
+        <div class="col-sm-8">
+          <select
+            class="form-control"
+            formControlName="roleId"
+            id="roleId"
+            (blur)="logValidationErrors(editUserAccount)"
+          >
+            <option *ngFor="let role of roles" [value]="role.Id">
+              {{ role.Name }}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formsErrors.roleId">
+            {{ formsErrors.roleId }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="editAddLabel === 'Add'">
+        <label for="email" class="col-sm-4 col-form-label">Email</label>
+        <div class="col-sm-8">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="email"
+            id="email"
+            (blur)="logValidationErrors(editUserAccount)"
+          />
+          <span class="help-block" *ngIf="formsErrors.email">
+            {{ formsErrors.email }}
+          </span>
+        </div>
+      </div>
+      <div class="form-group row" *ngIf="editAddLabel === 'Add'">
+        <label for="password" class="col-sm-4 col-form-label">Password</label>
+        <div class="col-sm-8">
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            id="password"
+            (blur)="logValidationErrors(editUserAccount)"
+          />
+          <span class="help-block" *ngIf="formsErrors.password">
+            {{ formsErrors.password }}
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="closeBtnClick()">
+          Close
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="editUserAccount.invalid"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!--- Modal for complete Table -->
+<ng-template #tenantAssociation let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editLabel">User Associated Tenants</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="closeBtnClick()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="userTenants" (ngSubmit)="associationTenant()">
+      <div class="form-group row">
+        <label for="tenantId" class="col-sm-2 col-form-label">Tenants</label>
+        <div class="col-sm-8">
+          <select
+            class="form-control"
+            formControlName="tenantId"
+            id="tenantId"
+            (blur)="logValidationErrors(userTenants)"
+          >
+            <option *ngFor="let tenant of tenants" [value]="tenant.Id">
+              {{ tenant.OrganizationName }}
+            </option>
+          </select>
+          <span class="help-block" *ngIf="formsErrors.tenantId">
+            {{ formsErrors.tenantId }}
+          </span>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary col-sm-2"
+          [disabled]="userTenants.invalid"
+        >
+          Add
+        </button>
+      </div>
+    </form>
+    <table class="table table-striped border mt-4">
+      <thead>
+        <tr>
+          <th sortable="Name" (sort)="onSort($event)">Associated Tenant</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tenant of cfilterTenants">
+          <td>
+            <ngb-highlight
+              [result]="tenant.OrganizationName"
+              [term]="csearchTerm"
+            ></ngb-highlight>
+          </td>
+          <td>
+            <em
+              class="ti-trash text-info m-r-10 pointer"
+              (click)="associationTenant(tenant.Id)"
+            ></em>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

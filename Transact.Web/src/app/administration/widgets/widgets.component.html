@@ -1,0 +1,116 @@
+<div class="row">
+  <div class="col-md-12">
+    <!--- Complete Table -->
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-0"><span class="lstick"></span>Widgets</h4>
+        <table class="table table-striped border mt-4">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th sortable="Name" (sort)="onSort($event)">Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="
+                let widget of cfilterWidget
+                  | slice
+                    : (cpage - 1) * cpageSize
+                    : (cpage - 1) * cpageSize + cpageSize
+              "
+            >
+              <td>{{ widget.Id }}</td>
+              <td>
+                <ngb-highlight
+                  [result]="widget.Name"
+                  [term]="csearchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <i
+                  class="ti-layers text-info m-r-10 pointer"
+                  (click)="openModal(editModal, widget.Id)"
+                ></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2"></div>
+      </div>
+    </div>
+    <!--- End Complete Table -->
+    <!--- Basic Table -->
+  </div>
+</div>
+<!--- Modal for complete Table -->
+<ng-template #editModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="editLabel">Roles Association</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="closeBtnClick()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="modal-body">
+      <form [formGroup]="widgetRoles" (ngSubmit)="associatedRoles()">
+        <div class="form-group row">
+          <label for="roleId" class="col-sm-2 col-form-label">Roles</label>
+          <div class="col-sm-8">
+            <select
+              class="form-control"
+              formControlName="roleId"
+              id="roleId"
+              (blur)="logValidationErrors(widgetRoles)"
+            >
+              <option *ngFor="let role of roles" [value]="role.Id">
+                {{ role.Name }}
+              </option>
+            </select>
+            <span class="help-block" *ngIf="formsErrors.roleId">
+              {{ formsErrors.roleId }}
+            </span>
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary col-sm-2"
+            [disabled]="widgetRoles.invalid"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+      <table class="table table-striped border mt-4">
+        <thead>
+          <tr>
+            <th sortable="Name" (sort)="onSort($event)">Associated Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let role of cfilterRoles">
+            <td>
+              <ngb-highlight
+                [result]="role.Name"
+                [term]="csearchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <em
+                class="ti-trash text-info m-r-10 pointer"
+                (click)="associatedRoles(role.Id)"
+              ></em>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>

@@ -10,5 +10,7 @@ namespace Transact.Data.Abstractions.Services
         CustomResponse GetById(Guid Id);
         CustomResponse UpdateWidget(WidgetVM vmObj);
         CustomResponse GetWidgetAccess(Guid Id);
+        CustomResponse AddRoleToWidget(WidgetRoleVM vmObj);
+        CustomResponse RemoveRoleFromWidget(WidgetRoleVM vmObj);
     }
 }

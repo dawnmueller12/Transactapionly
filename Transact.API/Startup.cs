@@ -9,7 +9,6 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.IO;
 using Transact.API.Extensions;
 using Transact.Data.Abstractions.DBFactory;
 using Transact.Data.Abstractions.Repository;
@@ -17,7 +16,6 @@ using Transact.Data.Abstractions.Services;
 using Transact.Data.Abstractions.UnitOfWork;
 using Transact.Data.Core;
 using Transact.Data.Models;
-using Transact.Data.Models.Common;
 using Transact.Data.Repository;
 using Transact.Data.Services;
 
@@ -45,10 +43,18 @@ namespace Transact
                 options.UseSqlServer(Configuration.GetConnectionString("TransactDBContext"));
             });
 
+
             services.AddScoped(typeof(IEntityBaseRepository<>), typeof(EntityBaseRepository<>));
             services.AddScoped(typeof(IDbFactory), typeof(DbFactory));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             services.AddScoped(typeof(IDataRepositoryFactory), typeof(DataRepositoryFactory));
+
+            services.AddScoped(typeof(IGraphService), typeof(GraphService));
+            services.AddScoped(typeof(IRoleService), typeof(RoleService));
+            services.AddScoped(typeof(ITenantService), typeof(TenantService));
+            services.AddScoped(typeof(IUserService), typeof(UserService));
+            services.AddScoped(typeof(IWidgetService), typeof(WidgetService));
+            services.AddScoped(typeof(IDashboardService), typeof(DashboardService));
 
             services.AddMvc()
                 .AddNewtonsoftJson(opt =>

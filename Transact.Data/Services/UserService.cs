@@ -13,10 +13,13 @@ namespace Transact.Data.Services
 {
     public class UserService : BaseService, IUserService
     {
+        private IRoleService _roleService { get; set; }
+
         public UserService(IUnitOfWork unitOfWork, IMapper mapper, AppSettings appSettings) : base(unitOfWork, mapper, appSettings)
         {
-
+            _roleService = new RoleService(_unitOfWork, _mapper, _appSettings);
         }
+
         public CustomResponse GetAllUsers()
         {
             var _userRepo = _unitOfWork.GetRepository<UserAccount>();
@@ -45,23 +48,33 @@ namespace Transact.Data.Services
 
         public CustomResponse AddUser(UserVM vmObj)
         {
-            GraphService graphService = new GraphService(_appSettings);
-            CustomResponse response = graphService.CreateUser(vmObj);
-            if (response.IS_SUCCESS)
+            CustomResponse response = new CustomResponse();
+            if (!vmObj.RoleId.HasValue)
             {
-                var _userRepo = _unitOfWork.GetRepository<UserAccount>();
-                var userAccDBObj = _mapper.Map<UserVM, UserAccount>(vmObj);
-                User graphUser = (User)response.RESPONSE;
-                userAccDBObj.Id = Guid.Parse(graphUser.Id);
-                userAccDBObj.CreatedBy = null;
-                _userRepo.Add(userAccDBObj);
-                _unitOfWork.Commit();
-                response.IS_SUCCESS = true;
-                response.MESSAGE = "User created successfully";
+                response.IS_SUCCESS = false;
+                response.MESSAGE = "Role Id is required";
             }
             else
             {
-                response.RESPONSE = null;
+                CustomResponse roleCustomer = _roleService.GetById(vmObj.RoleId.Value);
+                GraphService graphService = new GraphService(_appSettings);
+                response = graphService.CreateUser(vmObj, (RoleVM)roleCustomer.RESPONSE);
+                if (response.IS_SUCCESS)
+                {
+                    var _userRepo = _unitOfWork.GetRepository<UserAccount>();
+                    var userAccDBObj = _mapper.Map<UserVM, UserAccount>(vmObj);
+                    User graphUser = (User)response.RESPONSE;
+                    userAccDBObj.Id = Guid.Parse(graphUser.Id);
+                    userAccDBObj.CreatedBy = null;
+                    _userRepo.Add(userAccDBObj);
+                    _unitOfWork.Commit();
+                    response.IS_SUCCESS = true;
+                    response.MESSAGE = "User created successfully";
+                }
+                else
+                {
+                    response.RESPONSE = null;
+                }
             }
             return response;
         }

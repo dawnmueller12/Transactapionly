@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using Transact.Data;
-using Transact.Data.Abstractions.UnitOfWork;
+using Transact.Data.Abstractions.Services;
 using Transact.Data.Models.Common;
-using Transact.Data.Services;
 using Transact.Data.ViewModels;
 
 namespace Transact.API.Controllers
@@ -20,16 +18,15 @@ namespace Transact.API.Controllers
     [Authorize]
     public class WidgetController : ControllerBase
     {
-        private WidgetService _widgetService = null;
+        private IWidgetService _widgetService = null;
 
-        public WidgetController(IUnitOfWork unitOfWork, IWebHostEnvironment hostingEnvironment,
-            IConfiguration config, IMapper mapper, AppSettings appSettings) : base(unitOfWork, hostingEnvironment, config, mapper, appSettings)
+        public WidgetController(IWebHostEnvironment hostingEnvironment, IConfiguration config, AppSettings appSettings, IWidgetService widgetService) : base(hostingEnvironment, config, appSettings)
         {
+            _widgetService = widgetService;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            _widgetService = new WidgetService(_unitOfWork, _mapper, _appSettings);
         }
 
         [HttpGet]
@@ -75,6 +72,7 @@ namespace Transact.API.Controllers
         }
 
         [HttpGet("{Id}/roles")]
+        [ProducesResponseType(typeof(CustomResponse), StatusCodes.Status200OK)]
         public IActionResult GetWidgetAccess(Guid Id)
         {
             return Ok(_widgetService.GetWidgetAccess(Id));

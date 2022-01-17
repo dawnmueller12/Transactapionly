@@ -3,6 +3,7 @@ using Microsoft.Graph;
 using System;
 using System.Collections.Generic;
 using Transact.Data.Abstractions.Services;
+using Transact.Data.Helper;
 using Transact.Data.Models.Common;
 using Transact.Data.Models.Graph;
 using Transact.Data.ViewModels;
@@ -13,6 +14,10 @@ namespace Transact.Data.Services
     {
         private readonly AppSettings _appSettings;
         private GraphServiceClient graphClient { get; set; }
+
+        // Declare the names of the custom attributes
+        private const string customAttributeName1 = "RoleID";
+        private const string customAttributeName2 = "RoleName";
 
         public GraphService(AppSettings appSettings)
         {
@@ -26,11 +31,22 @@ namespace Transact.Data.Services
             graphClient = new GraphServiceClient(clientSecretCredential, scopes);
         }
 
-        public CustomResponse CreateUser(UserVM vmObj)
+        public CustomResponse CreateUser(UserVM vmObj, RoleVM roleVMObj)
         {
             CustomResponse response = new CustomResponse();
             try
             {
+                // Get the complete name of the custom attribute (Azure AD extension)
+                B2cCustomAttributeHelper helper = new B2cCustomAttributeHelper(_appSettings.AzureADB2CConfig.B2cExtensionAppClientId);
+                string roleIdAttributeName = helper.GetCompleteAttributeName(customAttributeName1);
+                string roleNameAttributeName = helper.GetCompleteAttributeName(customAttributeName2);
+
+
+                // Fill custom attributes
+                IDictionary<string, object> extensionInstance = new Dictionary<string, object>();
+                extensionInstance.Add(roleIdAttributeName, roleVMObj.Id);
+                extensionInstance.Add(roleNameAttributeName, roleVMObj.Name);
+
                 UserModel userModel = new UserModel();
                 userModel.Password = vmObj.Password;
                 userModel.DisplayName = vmObj.FirstName + " " + vmObj.LastName;
@@ -43,6 +59,8 @@ namespace Transact.Data.Services
                     IssuerAssignedId = vmObj.Email
                     }
                 };
+                userModel.AdditionalData = extensionInstance;
+
                 userModel.SetB2CProfile(_appSettings.AzureADB2CConfig.Domain);
 
                 User user = graphClient.Users
@@ -50,6 +68,11 @@ namespace Transact.Data.Services
                                     .AddAsync(userModel).Result;
                 response.IS_SUCCESS = true;
                 response.RESPONSE = user;
+                var result = graphClient.Users[user.Id]
+                   .Request()
+                   .Select($"id,givenName,surName,displayName,identities,{roleIdAttributeName},{roleNameAttributeName}")
+                   .GetAsync().Result;
+
             }
             catch (Exception exp)
             {

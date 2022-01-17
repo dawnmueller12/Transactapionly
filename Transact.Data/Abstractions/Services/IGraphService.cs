@@ -4,6 +4,6 @@ namespace Transact.Data.Abstractions.Services
 {
     public interface IGraphService
     {
-        public CustomResponse CreateUser(UserVM vmObj);
+        public CustomResponse CreateUser(UserVM vmObj, RoleVM roleVMObj);
     }
 }
